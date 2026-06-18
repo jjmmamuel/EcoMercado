@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EcoMercado | Prototipo web</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Saltar al contenido</a>
+
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Navegación principal">
+      <div class="brand">
+        <div class="brand__logo" aria-hidden="true">⚡</div>
+        <div>
+          <strong>EcoMercado</strong>
+          <span>Prototipo web</span>
+        </div>
+      </div>
+
+      <nav class="nav" id="mainNav">
+        <button class="nav__item is-active" data-screen="login">Inicio</button>
+        <button class="nav__item" data-screen="dashboard">Dashboard</button>
+        <button class="nav__item" data-screen="equipos">Equipos</button>
+        <button class="nav__item" data-screen="detalle">Detalle</button>
+        <button class="nav__item" data-screen="simulador">Simulador</button>
+        <button class="nav__item" data-screen="confirmacion">Plan</button>
+        <button class="nav__item" data-screen="perfil">Perfil</button>
+      </nav>
+
+      <div class="sidebar__footer">
+        <p>ODS vinculada</p>
+        <strong>ODS 7 · Meta 7.3</strong>
+        <small>Eficiencia energética</small>
+      </div>
+    </aside>
+
+    <main id="main" class="content">
+      <header class="topbar">
+        <button class="icon-button mobile-only" id="openMenu" aria-label="Abrir menú">☰</button>
+        <div>
+          <p class="eyebrow">Optimización de consumo eléctrico</p>
+          <h1 id="pageTitle">Inicio de sesión</h1>
+        </div>
+        <div class="topbar__actions">
+          <span class="status-pill" id="savingStatus">Datos locales</span>
+          <button class="button button--ghost" id="resetDemo" title="Reiniciar datos de ejemplo">Reiniciar demo</button>
+        </div>
+      </header>
+
+      <!-- Pantalla 1: Splash / Login -->
+      <section class="screen is-visible" id="screen-login" aria-labelledby="title-login">
+        <div class="hero-card animate-in">
+          <div class="hero-card__copy">
+            <span class="badge">Prototipo interactivo</span>
+            <h2 id="title-login">Reduce el gasto eléctrico de tu puesto sin adivinar</h2>
+            <p>
+              EcoMercado ayuda a registrar equipos, estimar consumo mensual, detectar los aparatos que más gastan
+              y generar un plan de reemplazo progresivo.
+            </p>
+            <form class="login-form" id="loginForm">
+              <label>
+                Nombre del comerciante
+                <input type="text" id="merchantName" placeholder="Ej. Rosa, Juan, María" required />
+              </label>
+              <label>
+                Tipo de puesto
+                <select id="businessType">
+                  <option value="Abarrotes">Abarrotes</option>
+                  <option value="Lácteos">Lácteos</option>
+                  <option value="Carnes y congelados">Carnes y congelados</option>
+                  <option value="Jugos y comidas">Jugos y comidas</option>
+                  <option value="Otro">Otro</option>
+                </select>
+              </label>
+              <button class="button button--primary" type="submit">Entrar al dashboard</button>
+            </form>
+          </div>
+          <div class="hero-card__visual" aria-hidden="true">
+            <div class="meter-card">
+              <span>Consumo estimado</span>
+              <strong id="heroKwh">0 kWh</strong>
+              <small>por mes</small>
+            </div>
+            <div class="sparkline">
+              <span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Pantalla 2: Dashboard -->
+      <section class="screen" id="screen-dashboard" aria-labelledby="title-dashboard">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Resumen mensual</p>
+            <h2 id="title-dashboard">Dashboard de consumo</h2>
+          </div>
+          <button class="button button--primary" data-screen-target="equipos">Registrar equipo</button>
+        </div>
+
+        <div class="metric-grid">
+          <article class="metric-card">
+            <span>Consumo mensual</span>
+            <strong id="totalKwh">0 kWh</strong>
+            <small>Estimado según equipos registrados</small>
+          </article>
+          <article class="metric-card">
+            <span>Costo mensual</span>
+            <strong id="totalCost">S/ 0.00</strong>
+            <small>Calculado con tarifa editable</small>
+          </article>
+          <article class="metric-card">
+            <span>Equipo crítico</span>
+            <strong id="worstDevice">Sin datos</strong>
+            <small>Mayor participación en consumo</small>
+          </article>
+          <article class="metric-card">
+            <span>Ahorro simulado</span>
+            <strong id="possibleSaving">S/ 0.00</strong>
+            <small>Desde el simulador de cambio</small>
+          </article>
+        </div>
+
+        <div class="grid-2">
+          <article class="panel">
+            <div class="panel__header">
+              <h3>Distribución por equipo</h3>
+              <span class="badge badge--soft">Lista flexible</span>
+            </div>
+            <div id="consumptionBars" class="bars"></div>
+          </article>
+          <article class="panel">
+            <div class="panel__header">
+              <h3>Alerta principal</h3>
+              <span class="badge badge--warning">Revisión</span>
+            </div>
+            <p id="mainAlert" class="alert-text">Registra equipos para obtener una alerta.</p>
+            <button class="button button--secondary" data-screen-target="detalle">Ver recomendaciones</button>
+          </article>
+        </div>
+      </section>
+
+      <!-- Pantalla 3: Equipos -->
+      <section class="screen" id="screen-equipos" aria-labelledby="title-equipos">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Inventario energético</p>
+            <h2 id="title-equipos">Registrar equipos del puesto</h2>
+          </div>
+          <button class="button button--ghost" data-screen-target="dashboard">Volver al dashboard</button>
+        </div>
+
+        <div class="grid-2 grid-2--form-heavy">
+          <form class="panel form-card" id="equipmentForm">
+            <h3>Nuevo equipo</h3>
+            <div class="form-grid">
+              <label>
+                Nombre del equipo
+                <input id="deviceName" type="text" placeholder="Ej. Congeladora antigua" required />
+              </label>
+              <label>
+                Categoría
+                <select id="deviceCategory">
+                  <option value="Refrigeración">Refrigeración</option>
+                  <option value="Iluminación">Iluminación</option>
+                  <option value="Ventilación">Ventilación</option>
+                  <option value="Cocina">Cocina</option>
+                  <option value="Otros">Otros</option>
+                </select>
+              </label>
+              <label>
+                Potencia por unidad (W)
+                <input id="deviceWatts" type="number" min="1" value="100" required />
+              </label>
+              <label>
+                Cantidad
+                <input id="deviceQty" type="number" min="1" value="1" required />
+              </label>
+              <label>
+                Horas de uso al día
+                <input id="deviceHours" type="number" min="0" max="24" step="0.5" value="8" required />
+              </label>
+              <label>
+                Días al mes
+                <input id="deviceDays" type="number" min="1" max="31" value="30" required />
+              </label>
+              <label>
+                Estado del equipo
+                <select id="deviceState">
+                  <option value="Antiguo / ineficiente">Antiguo / ineficiente</option>
+                  <option value="Regular">Regular</option>
+                  <option value="Eficiente">Eficiente</option>
+                </select>
+              </label>
+              <label>
+                Prioridad percibida
+                <select id="devicePriority">
+                  <option value="Alta">Alta</option>
+                  <option value="Media">Media</option>
+                  <option value="Baja">Baja</option>
+                </select>
+              </label>
+            </div>
+            <button class="button button--primary" type="submit">Guardar equipo</button>
+          </form>
+
+          <article class="panel">
+            <div class="panel__header">
+              <h3>Equipos registrados</h3>
+              <span class="badge badge--soft" id="deviceCount">0 equipos</span>
+            </div>
+            <div class="device-list" id="deviceList"></div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Pantalla 4: Detalle / Recomendaciones -->
+      <section class="screen" id="screen-detalle" aria-labelledby="title-detalle">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Diagnóstico técnico</p>
+            <h2 id="title-detalle">Detalle y recomendaciones</h2>
+          </div>
+          <button class="button button--primary" data-screen-target="simulador">Abrir simulador</button>
+        </div>
+
+        <div class="grid-2">
+          <article class="panel">
+            <div class="panel__header">
+              <h3>Equipo seleccionado</h3>
+              <span class="badge badge--soft">Detalle</span>
+            </div>
+            <div id="selectedDeviceDetail" class="detail-card empty-state">
+              Selecciona un equipo desde la lista para ver su detalle.
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel__header">
+              <h3>Asistente de recomendación</h3>
+              <span class="badge badge--warning">Reglas JS</span>
+            </div>
+            <p class="hint">
+              Este módulo no usa inteligencia artificial real. Genera recomendaciones automáticas con reglas transparentes
+              basadas en potencia, horas de uso, categoría y estado del equipo.
+            </p>
+            <div id="recommendations" class="recommendations"></div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Pantalla 5: Simulador -->
+      <section class="screen" id="screen-simulador" aria-labelledby="title-simulador">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Acción principal</p>
+            <h2 id="title-simulador">Simulador de ahorro por cambio de equipo</h2>
+          </div>
+          <button class="button button--ghost" data-screen-target="detalle">Volver a recomendaciones</button>
+        </div>
+
+        <div class="grid-2 grid-2--form-heavy">
+          <form class="panel form-card" id="simulatorForm">
+            <h3>Comparar equipo actual vs eficiente</h3>
+            <div class="form-grid">
+              <label>
+                Equipo actual
+                <select id="currentDeviceSelect"></select>
+              </label>
+              <label>
+                Potencia del equipo eficiente (W)
+                <input id="efficientWatts" type="number" min="1" value="18" required />
+              </label>
+              <label>
+                Costo de compra del equipo eficiente (S/)
+                <input id="replacementCost" type="number" min="0" step="0.1" value="120" required />
+              </label>
+              <label>
+                Tarifa eléctrica referencial (S/ por kWh)
+                <input id="tariff" type="number" min="0" step="0.01" value="0.80" required />
+              </label>
+            </div>
+            <button class="button button--primary" type="submit">Calcular ahorro</button>
+          </form>
+
+          <article class="panel result-panel" id="simulatorResult">
+            <h3>Resultado</h3>
+            <p class="empty-state">Completa el simulador para ver el ahorro estimado.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- Pantalla 6: Confirmación / Plan -->
+      <section class="screen" id="screen-confirmacion" aria-labelledby="title-confirmacion">
+        <div class="success-card animate-in">
+          <div class="success-icon" aria-hidden="true">✓</div>
+          <p class="eyebrow">Confirmación</p>
+          <h2 id="title-confirmacion">Plan de ahorro generado</h2>
+          <p>
+            El sistema consolidó el diagnóstico del puesto y propuso una acción prioritaria. Este flujo cumple la función
+            de cierre del prototipo: mostrar que el comerciante puede terminar con una decisión concreta.
+          </p>
+          <div id="actionPlan" class="action-plan"></div>
+          <div class="button-row">
+            <button class="button button--secondary" data-screen-target="dashboard">Retornar al dashboard</button>
+            <button class="button button--primary" id="copyPrototypeLink">Copiar enlace del prototipo</button>
+          </div>
+          <div class="qr-box">
+            <img id="qrImage" alt="Código QR del prototipo" />
+            <small>El QR funcionará mejor cuando publiques la web, por ejemplo en GitHub Pages.</small>
+          </div>
+        </div>
+      </section>
+
+      <!-- Pantalla extra: Perfil / variables -->
+      <section class="screen" id="screen-perfil" aria-labelledby="title-perfil">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Variables del sistema</p>
+            <h2 id="title-perfil">Perfil y configuración</h2>
+          </div>
+          <button class="button button--ghost" data-screen-target="dashboard">Volver</button>
+        </div>
+
+        <form class="panel form-card" id="settingsForm">
+          <h3>Datos usados por el prototipo</h3>
+          <div class="form-grid">
+            <label>
+              Nombre del puesto o comerciante
+              <input id="settingMerchant" type="text" />
+            </label>
+            <label>
+              Tipo de negocio
+              <input id="settingBusiness" type="text" />
+            </label>
+            <label>
+              Tarifa eléctrica referencial (S/ por kWh)
+              <input id="settingTariff" type="number" min="0" step="0.01" />
+            </label>
+            <label>
+              Presupuesto mensual para mejoras (S/)
+              <input id="settingBudget" type="number" min="0" step="1" />
+            </label>
+          </div>
+          <button class="button button--primary" type="submit">Guardar configuración</button>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <div class="mobile-backdrop" id="mobileBackdrop" hidden></div>
+
+  <template id="deviceTemplate">
+    <article class="device-card">
+      <div>
+        <strong class="device-card__name"></strong>
+        <span class="device-card__meta"></span>
+      </div>
+      <div class="device-card__actions">
+        <span class="device-card__kwh"></span>
+        <button class="button button--tiny device-card__view">Ver</button>
+        <button class="button button--tiny button--danger device-card__delete">Eliminar</button>
+      </div>
+    </article>
+  </template>
+
+  <script src="script.js"></script>
+</body>
+</html>
