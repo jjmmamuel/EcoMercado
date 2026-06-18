@@ -27,13 +27,3 @@ Prototipo HTML, CSS y JavaScript para el proyecto de optimización del consumo e
 - Animación: transiciones CSS para entrada de pantallas, barras y tarjetas.
 - Prototipo compartible: botón para copiar enlace y generación de QR cuando la web esté publicada.
 
-## Publicarlo rápido en GitHub Pages
-
-1. Crea un repositorio nuevo en GitHub.
-2. Sube `index.html`, `styles.css` y `script.js`.
-3. En Settings → Pages, selecciona Branch: `main` y carpeta `/root`.
-4. Copia el enlace publicado y genera el QR desde la pantalla de confirmación.
-
-## Nota importante
-
-El módulo de recomendaciones no usa IA real. Usa reglas transparentes en JavaScript. Si el profesor exige IA, se puede integrar después con una API, pero para prototipo básico es más defendible decir que es un asistente automático basado en reglas.
